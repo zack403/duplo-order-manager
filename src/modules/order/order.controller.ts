@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from '@prisma/client';
@@ -29,5 +29,19 @@ export class OrderController {
   @Post()
   create(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
     return this.orderService.create(createOrderDto);
+  }
+
+  @ApiOperation({ summary: 'Get business order details' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns business order details',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
+  @Get('detail/:businessId')
+  async getOrdersDetailsForBusiness(@Param('businessId') businessId: string) {
+    return await this.orderService.getOrdersDetailsForBusiness(businessId);
   }
 }

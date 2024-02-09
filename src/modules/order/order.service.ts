@@ -10,4 +10,8 @@ export class OrderService {
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
     return await this.orderRepo.create(createOrderDto);
   }
+
+  async getOrdersDetailsForBusiness(businessId: string) {
+    return await this.orderRepo.getOrdersDetailsForBusiness(businessId);
+  }
 }
