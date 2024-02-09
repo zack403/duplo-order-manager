@@ -6,6 +6,7 @@ import configuration from 'src/common/config/app/configuration';
 import { validate } from 'src/common/utils/env.validation';
 import { OrderModule } from '../order/order.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { BusinessModule } from '../business/business.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PrismaModule } from '../prisma/prisma.module';
       validate,
     }),
     PrismaModule,
+    BusinessModule,
     OrderModule,
   ],
   controllers: [AppController],
