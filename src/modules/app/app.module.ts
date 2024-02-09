@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
@@ -7,6 +12,7 @@ import { validate } from 'src/common/utils/env.validation';
 import { OrderModule } from '../order/order.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { BusinessModule } from '../business/business.module';
+import { ValidateCreateOrderMiddleware } from 'src/common/middlewares/validate-create-order.middleware';
 
 @Module({
   imports: [
@@ -23,4 +29,10 @@ import { BusinessModule } from '../business/business.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(ValidateCreateOrderMiddleware)
+      .forRoutes({ path: 'order', method: RequestMethod.POST });
+  }
+}
