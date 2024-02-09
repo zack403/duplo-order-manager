@@ -28,43 +28,29 @@ export class OrderRepository {
       today.getDate(),
     );
 
-    const orderDataWithoutDate = await this.prisma.order.aggregate({
-      where: {
-        businessId,
-      },
-      _sum: {
-        amount: true,
-      },
-      _count: {
-        id: true,
-      },
-    });
-
-    const orderDataWithDate = await this.prisma.order.aggregate({
-      where: {
-        businessId,
-        date: {
-          gte: startOfToday,
+    const [orderDataWithoutDate, orderDataWithDate] = await Promise.all([
+      this.prisma.order.aggregate({
+        where: { businessId },
+        _sum: { amount: true },
+        _count: { id: true },
+      }),
+      this.prisma.order.aggregate({
+        where: {
+          businessId,
+          date: {
+            gte: startOfToday,
+          },
         },
-      },
-      _sum: {
-        amount: true,
-      },
-      _count: {
-        id: true,
-      },
-    });
-
-    const totalOrders = orderDataWithoutDate._count.id;
-    const totalAmount = orderDataWithoutDate._sum.amount;
-    const totalOrdersToday = orderDataWithDate._count.id;
-    const totalAmountToday = orderDataWithDate._sum.amount;
+        _sum: { amount: true },
+        _count: { id: true },
+      }),
+    ]);
 
     return {
-      totalOrders,
-      totalAmount,
-      totalOrdersToday,
-      totalAmountToday,
+      totalOrders: orderDataWithoutDate._count.id,
+      totalAmount: orderDataWithoutDate._sum.amount,
+      totalOrdersToday: orderDataWithDate._count.id,
+      totalAmountToday: orderDataWithDate._sum.amount,
     };
   }
 }
