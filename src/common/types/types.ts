@@ -1,5 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+export interface HttpExceptionResponse {
+  statusCode: number;
+  error: string;
+}
+
+export interface CustomHttpExceptionResponse extends HttpExceptionResponse {
+  path: string;
+  method: string;
+  timeStamp: Date;
+}
 export class CreateOrderResponseDetail {
   @ApiProperty()
   id: string;

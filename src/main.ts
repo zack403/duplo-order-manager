@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import * as fs from 'fs';
 import * as morgan from 'morgan';
 import { setupSwagger } from './common/config/swagger.config';
+import { AllExceptionsFilter } from './common/filters/exceptions.filter';
 
 const logStream = fs.createWriteStream('api.log', {
   flags: 'a',
@@ -20,6 +21,8 @@ async function bootstrap() {
   app.use(helmet());
 
   app.enableCors();
+
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   app.use(compression());
 
