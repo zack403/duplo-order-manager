@@ -13,6 +13,7 @@ import { OrderModule } from '../order/order.module';
 import { PrismaModule } from '../prisma/prisma.module';
 import { BusinessModule } from '../business/business.module';
 import { ValidateCreateOrderMiddleware } from 'src/common/middlewares/validate-create-order.middleware';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -25,6 +26,14 @@ import { ValidateCreateOrderMiddleware } from 'src/common/middlewares/validate-c
     PrismaModule,
     BusinessModule,
     OrderModule,
+    BullModule.forRoot({
+      redis: {
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT),
+        db: parseInt(process.env.REDIS_DB),
+        password: process.env.REDIS_PASSWORD,
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

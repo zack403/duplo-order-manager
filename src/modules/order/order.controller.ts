@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { Order } from '@prisma/client';
+// import { Order } from '@prisma/client';
 import {
   ApiBadRequestResponse,
   ApiOperation,
@@ -27,8 +27,9 @@ export class OrderController {
     description: 'Internal server error',
   })
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
-    return this.orderService.create(createOrderDto);
+  create(@Body() createOrderDto: CreateOrderDto) {
+    this.orderService.create(createOrderDto);
+    return { message: 'Order received and queued for processing' };
   }
 
   @ApiOperation({ summary: 'Get business order details' })
